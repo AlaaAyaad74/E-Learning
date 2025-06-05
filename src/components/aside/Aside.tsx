@@ -8,7 +8,7 @@ import {
   Checkbox,
   ListItemText,
 } from "@mui/material";
-import { Close, ExpandLess } from "@mui/icons-material";
+import {  Close, ExpandLess } from "@mui/icons-material";
 import { ExpandMore } from "@mui/icons-material";
 import { PlayArrow } from "@mui/icons-material";
 import { courses } from "../../../data/courses";
@@ -48,18 +48,26 @@ function Aside({
   return (
     <>
       {openAside && (
-        <Box className="aside-animation">
+        <Box
+          className="aside-animation"
+          sx={{ borderLeft: "1px solid #e6e6e6", maxHeight: "100vh" }}
+        >
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
               padding: "1rem",
+              borderBottom: "1px solid #e6e6e6",
             }}
           >
             <Typography
               variant="h4"
-              sx={{ fontSize: "1.5rem", fontWeight: "bold" }}
+              sx={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+             
+              }}
             >
               Course Content
             </Typography>

@@ -55,7 +55,7 @@ function CourseSections() {
       handleVideoSelect(prevSectionIndex, lastVideoIndex);
     }
   };
-  const [openAside, setOpenAside] = useState(false);
+  const [openAside, setOpenAside] = useState(true);
   return (
     <Box
       sx={{
