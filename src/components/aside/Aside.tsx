@@ -8,7 +8,7 @@ import {
   Checkbox,
   ListItemText,
 } from "@mui/material";
-import {  Close, ExpandLess } from "@mui/icons-material";
+import { Close, ExpandLess } from "@mui/icons-material";
 import { ExpandMore } from "@mui/icons-material";
 import { PlayArrow } from "@mui/icons-material";
 import { courses } from "../../../data/courses";
@@ -30,9 +30,7 @@ interface AsideProps {
 function Aside({
   openSectionIndex,
   setOpenSectionIndex,
-  currentSectionIndex,
   setCurrentSectionIndex,
-  currentVideoIndex,
   setCurrentVideoIndex,
   setSelectedVideo,
   completedVideos,
@@ -50,7 +48,11 @@ function Aside({
       {openAside && (
         <Box
           className="aside-animation"
-          sx={{ borderLeft: "1px solid #e6e6e6", maxHeight: "100vh" }}
+          sx={{
+            borderLeft: "1px solid #e6e6e6",
+            maxHeight: "100vh",
+            borderBottom: "1px solid #e6e6e6",
+          }}
         >
           <Box
             sx={{
@@ -66,7 +68,6 @@ function Aside({
               sx={{
                 fontSize: "1.5rem",
                 fontWeight: "bold",
-             
               }}
             >
               Course Content
@@ -89,17 +90,18 @@ function Aside({
                     sx={{
                       cursor: "pointer",
                       paddingLeft: "1rem",
-                      backgroundColor: "#eee",
+                      background:
+                        "linear-gradient(180deg, rgba(187, 150, 150, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%)",
                     }}
                   >
                     <Box>
                       <PlayArrow
                         sx={{
-                          fontSize: "2rem",
+                          fontSize: "1.25rem",
                           color: "white",
                           padding: "4px",
                           borderRadius: "50%",
-                          bgcolor: "gray",
+                          bgcolor: "#C0C0C0",
                         }}
                       />
                     </Box>
@@ -110,18 +112,50 @@ function Aside({
                       <Box sx={{ display: "flex", flexDirection: "column" }}>
                         <Typography
                           variant="body1"
-                          sx={{ fontSize: "1.1rem", fontWeight: "bold" }}
+                          sx={{
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                            lineHeight: "18px",
+                          }}
                         >
                           {section.title}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ fontSize: "14px", lineHeight: "14px" }}
+                        >
                           {completedCount}/{section.videos.length} videos
                         </Typography>
                       </Box>
                       {openSectionIndex === sectionIdx ? (
-                        <ExpandLess />
+                        <Box
+                          width={20}
+                          height={20}
+                          borderRadius={50}
+                          bgcolor={"#C0C0C0"}
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <ExpandLess
+                            sx={{ color: "white", fontSize: "18px" }}
+                          />
+                        </Box>
                       ) : (
-                        <ExpandMore />
+                        <Box
+                          width={20}
+                          height={20}
+                          borderRadius={50}
+                          bgcolor={"#C0C0C0"}
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <ExpandMore
+                            sx={{ color: "white", fontSize: "18px" }}
+                          />
+                        </Box>
                       )}
                     </ListItemButton>
                   </ListItem>
@@ -146,17 +180,17 @@ function Aside({
                           <Box
                             sx={{
                               position: "absolute",
-                              left: 36,
+                              left: 41,
                               zIndex: 1000,
                             }}
                           >
                             <PlayArrow
                               sx={{
-                                fontSize: "1.5rem",
+                                fontSize: "1.1rem",
                                 color: "white",
                                 padding: "2px",
                                 borderRadius: "50%",
-                                bgcolor: "gray",
+                                bgcolor: "#C0C0C0",
                               }}
                             />
                           </Box>
@@ -167,23 +201,31 @@ function Aside({
                               justifyContent: "start",
                               alignItems: "start",
                               borderLeft: "2px solid lightgray",
-                              pl: 3,
+                              padding: "0px 4px 0px 20px !important",
                               cursor: "pointer",
-                              backgroundColor:
-                                currentSectionIndex === sectionIdx &&
-                                currentVideoIndex === videoIdx
-                                  ? "#e0e0e0"
-                                  : "inherit",
-                              "&:hover": {
-                                backgroundColor: "lightgray",
-                              },
                             }}
                             onClick={() =>
                               handleVideoSelect(sectionIdx, videoIdx)
                             }
                           >
-                            <ListItemText primary={video.title} />
-                            <p>{video.duration}</p>
+                            <ListItemText
+                              sx={{
+                                fontSize: "17.5px",
+                                fontWeight: "bold",
+                                lineHeight: "12px",
+                                color: "#C0C0C0",
+                              }}
+                              primary={video.title}
+                            />
+                            <Typography
+                              sx={{
+                                fontSize: "14px",
+                                lineHeight: "10px",
+                                color: "#C0C0C0",
+                              }}
+                            >
+                              {video.duration}
+                            </Typography>
                           </ListItem>
                           <Checkbox
                             checked={completedVideos.includes(video.id)}

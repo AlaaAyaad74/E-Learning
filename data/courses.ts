@@ -13,7 +13,7 @@ export const courses = [
           {
             id: "c1s1v1",
             title: "Video 1 - Course 1 Section 1",
-            url: "/videos/vid_1.mp4",
+            url: "//videos/vid_1.mp4",
             duration: "10:00",
           },
           {

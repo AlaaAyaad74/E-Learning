@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { courses } from "../../data/courses";
 import Player from "../components/video_player/Player";
 import Aside from "../components/aside/Aside";
 import Navbar from "../components/nav_bar/Navbar";
+import TabsComponent from "../components/tabs/Tabs";
 
 function CourseSections() {
   const [openSectionIndex, setOpenSectionIndex] = useState<number>(0);
@@ -72,8 +73,7 @@ function CourseSections() {
           onNext={handleVideoEnd}
           onPrev={handleVideoPrev}
         />
-        <Typography variant="h4">{courses[0].title}</Typography>
-        <Typography variant="body1">{courses[0].description}</Typography>
+        <TabsComponent />
       </Box>
       <Aside
         openSectionIndex={openSectionIndex}

@@ -9,7 +9,9 @@ body {
 .aside-animation {
   animation: aside-animation 0.3s ease-in-out;
 }
-
+/* .css-112pelt-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: gray !important;
+} */
 
 @keyframes aside-animation {
   from {
