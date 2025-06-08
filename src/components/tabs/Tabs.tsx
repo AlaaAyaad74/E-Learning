@@ -3,6 +3,7 @@ import { Box, Tabs, Tab, Typography } from "@mui/material";
 import Reviews from "./Reviews";
 import FAQs from "./FAQs";
 import Announcements from "./Announcements";
+import NotesControls from "./Notes";
 
 type TabPanelProps = {
   children: React.ReactNode;
@@ -77,7 +78,8 @@ export default function TabsWithContent() {
         This is the Overview content.
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Here are your Notes.
+        {/* here ya Reda */}
+        {/* <NotesControls /> */}
       </TabPanel>
       <TabPanel
         value={value}
