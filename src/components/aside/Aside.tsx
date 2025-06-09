@@ -1,30 +1,27 @@
+import { useParams, useNavigate } from "react-router-dom";
 import {
-  Box,
   Typography,
+  Box,
   List,
   ListItem,
   ListItemButton,
   Collapse,
-  Checkbox,
   ListItemText,
+  Checkbox,
 } from "@mui/material";
-import { Close, ExpandLess } from "@mui/icons-material";
-import { ExpandMore } from "@mui/icons-material";
-import { PlayArrow } from "@mui/icons-material";
-import { courses } from "../../../data/courses";
+import { PlayArrow, ExpandLess, ExpandMore, Close } from "@mui/icons-material";
+import courses from "../../../data/courses";
 
 interface AsideProps {
   openSectionIndex: number;
   setOpenSectionIndex: (index: number) => void;
-  currentSectionIndex: number;
   setCurrentSectionIndex: (index: number) => void;
-  currentVideoIndex: number;
   setCurrentVideoIndex: (index: number) => void;
-  selectedVideo: string | null;
-  setSelectedVideo: (video: string | null) => void;
+  setSelectedVideo: (url: string) => void;
   completedVideos: string[];
   setOpenAside: (open: boolean) => void;
   openAside: boolean;
+  selectedVideo: string | null;
 }
 
 function Aside({
@@ -36,11 +33,19 @@ function Aside({
   completedVideos,
   setOpenAside,
   openAside,
+  selectedVideo,
 }: AsideProps) {
+  const { id: courseId } = useParams();
+  const navigate = useNavigate();
+  const course = courses.find((c) => c.id === courseId);
+  if (!course) return <Typography>Course not found</Typography>;
+
   const handleVideoSelect = (sectionIdx: number, videoIdx: number) => {
+    const video = course.sections[sectionIdx].videos[videoIdx];
+    navigate(`/course/${courseId}/video/${video.id}`);
     setCurrentSectionIndex(sectionIdx);
     setCurrentVideoIndex(videoIdx);
-    setSelectedVideo(courses[0].sections[sectionIdx].videos[videoIdx].url);
+    setSelectedVideo(video.url);
   };
 
   return (
@@ -49,9 +54,17 @@ function Aside({
         <Box
           className="aside-animation"
           sx={{
-            borderLeft: "1px solid #e6e6e6",
-            maxHeight: "100vh",
+            position: { xs: "fixed", md: "static", lg: "static" },
+            top: { xs: 0 },
+            left: { xs: openAside ? 0 : "-100%" },
+            width: "100%",
+            height: "100vh",
+            zIndex: { xs: 1200, md: 1200, lg: "auto" },
+            backgroundColor: "#fff",
+            borderLeft: { lg: "1px solid #e6e6e6" },
             borderBottom: "1px solid #e6e6e6",
+            transition: "left 0.3s ease-in-out",
+            overflowY: "auto",
           }}
         >
           <Box
@@ -65,20 +78,18 @@ function Aside({
           >
             <Typography
               variant="h4"
-              sx={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
-              }}
+              sx={{ fontSize: "1.5rem", fontWeight: "bold" }}
             >
-              Course Content
+              {course.title}
             </Typography>
             <Close
               onClick={() => setOpenAside(false)}
               sx={{ cursor: "pointer" }}
             />
           </Box>
+
           <List>
-            {courses[0].sections.map((section, sectionIdx) => {
+            {course.sections.map((section, sectionIdx) => {
               const completedCount = section.videos.filter((video) =>
                 completedVideos.includes(video.id)
               ).length;
@@ -120,131 +131,147 @@ function Aside({
                         >
                           {section.title}
                         </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: "14px", lineHeight: "14px" }}
-                        >
-                          {completedCount}/{section.videos.length} videos
-                        </Typography>
-                      </Box>
-                      {openSectionIndex === sectionIdx ? (
                         <Box
-                          width={20}
-                          height={20}
-                          borderRadius={50}
-                          bgcolor={"#C0C0C0"}
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "15px",
+                          }}
                         >
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: "14px", lineHeight: "14px" }}
+                          >
+                            {completedCount}/{section.videos.length} videos
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: "14px", lineHeight: "14px" }}
+                          >
+                            {Math.round(
+                              section.videos.reduce((acc, video) => {
+                                const [mins, secs] = video.duration
+                                  .split(":")
+                                  .map(Number);
+                                return acc + mins * 60 + secs;
+                              }, 0) / 60
+                            )}{" "}
+                            mins
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box
+                        width={20}
+                        height={20}
+                        borderRadius={50}
+                        bgcolor={"#C0C0C0"}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        {openSectionIndex === sectionIdx ? (
                           <ExpandLess
                             sx={{ color: "white", fontSize: "18px" }}
                           />
-                        </Box>
-                      ) : (
-                        <Box
-                          width={20}
-                          height={20}
-                          borderRadius={50}
-                          bgcolor={"#C0C0C0"}
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                        >
+                        ) : (
                           <ExpandMore
                             sx={{ color: "white", fontSize: "18px" }}
                           />
-                        </Box>
-                      )}
+                        )}
+                      </Box>
                     </ListItemButton>
                   </ListItem>
+
                   <Collapse
                     in={openSectionIndex === sectionIdx}
                     timeout="auto"
                     unmountOnExit
                   >
                     <List component="div" disablePadding>
-                      {section.videos.map((video, videoIdx) => (
-                        <Box
-                          key={video.id}
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            pl: 6,
-                            cursor: "pointer",
-                            position: "relative",
-                          }}
-                        >
+                      {section.videos.map((video, videoIdx) => {
+                        const isCurrent = selectedVideo === video.url;
+                        return (
                           <Box
-                            sx={{
-                              position: "absolute",
-                              left: 41,
-                              zIndex: 1000,
-                            }}
-                          >
-                            <PlayArrow
-                              sx={{
-                                fontSize: "1.1rem",
-                                color: "white",
-                                padding: "2px",
-                                borderRadius: "50%",
-                                bgcolor: "#C0C0C0",
-                              }}
-                            />
-                          </Box>
-                          <ListItem
+                            key={video.id}
                             sx={{
                               display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "start",
-                              alignItems: "start",
-                              borderLeft: "2px solid lightgray",
-                              padding: "0px 4px 0px 20px !important",
+                              alignItems: "center",
+                              pl: 6,
                               cursor: "pointer",
+                              position: "relative",
+                              backgroundColor: isCurrent
+                                ? "#f0f4ff"
+                                : "transparent",
                             }}
-                            onClick={() =>
-                              handleVideoSelect(sectionIdx, videoIdx)
-                            }
                           >
-                            <ListItemText
+                            <Box
                               sx={{
-                                fontSize: "17.5px",
-                                fontWeight: "bold",
-                                lineHeight: "12px",
-                                color: "#C0C0C0",
-                              }}
-                              primary={video.title}
-                            />
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                lineHeight: "10px",
-                                color: "#C0C0C0",
+                                position: "absolute",
+                                left: 41,
+                                zIndex: 1000,
                               }}
                             >
-                              {video.duration}
-                            </Typography>
-                          </ListItem>
-                          <Checkbox
-                            checked={completedVideos.includes(video.id)}
-                            disabled
-                            color="default"
-                          />
-                        </Box>
-                      ))}
+                              <PlayArrow
+                                sx={{
+                                  fontSize: "1.1rem",
+                                  color: "white",
+                                  padding: "2px",
+                                  borderRadius: "50%",
+                                  bgcolor: "#C0C0C0",
+                                }}
+                              />
+                            </Box>
+                            <ListItem
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "start",
+                                alignItems: "start",
+                                borderLeft: isCurrent
+                                  ? "3px solid #3f51b5"
+                                  : "2px solid lightgray",
+                                padding: "0px 4px 0px 20px !important",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                handleVideoSelect(sectionIdx, videoIdx)
+                              }
+                            >
+                              <ListItemText
+                                sx={{
+                                  fontSize: "17.5px",
+                                  fontWeight: isCurrent ? "bold" : "normal",
+                                  lineHeight: "12px",
+                                  color: isCurrent ? "#3f51b5" : "#C0C0C0",
+                                }}
+                                primary={video.title}
+                              />
+                              <Typography
+                                sx={{
+                                  fontSize: "14px",
+                                  lineHeight: "10px",
+                                  color: isCurrent ? "#3f51b5" : "#C0C0C0",
+                                }}
+                              >
+                                {video.duration}
+                              </Typography>
+                            </ListItem>
+                            <Checkbox
+                              checked={completedVideos.includes(video.id)}
+                              disabled
+                              color="default"
+                            />
+                          </Box>
+                        );
+                      })}
                     </List>
                   </Collapse>
                 </Box>
               );
             })}
           </List>
-        </Box>
-      )}
-      {!open && (
-        <Box>
-          <Typography variant="h4">Course Content</Typography>
         </Box>
       )}
     </>

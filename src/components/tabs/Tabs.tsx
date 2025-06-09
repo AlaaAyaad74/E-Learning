@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Box, Tabs, Tab, Typography } from "@mui/material";
+import { Box, Tabs, Tab } from "@mui/material";
 import Reviews from "./Reviews";
 import FAQs from "./FAQs";
 import Announcements from "./Announcements";
-import NotesControls from "./Notes";
+import Notes from "./Notes";
+import Overview from "./Overview";
 
 type TabPanelProps = {
   children: React.ReactNode;
@@ -25,18 +26,13 @@ function TabPanel({
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
     </div>
   );
 }
 
 export default function TabsWithContent() {
   const [value, setValue] = useState(0);
-
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -49,8 +45,10 @@ export default function TabsWithContent() {
         variant="fullWidth"
         aria-label="custom full-width tabs"
         TabIndicatorProps={{ style: { display: "none" } }}
+        className="res_flex"
         sx={{
           borderBottom: "1px solid #ccc",
+          gap: "8px",
         }}
       >
         {["Overview", "Notes", "Announcements", "FAQs", "Reviews"].map(
@@ -75,11 +73,14 @@ export default function TabsWithContent() {
       </Tabs>
 
       <TabPanel value={value} index={0}>
-        This is the Overview content.
+        <Overview />
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        {/* here ya Reda */}
-        {/* <NotesControls /> */}
+      <TabPanel
+        value={value}
+        index={1}
+        style={{ backgroundColor: "#F5F5F5", padding: "0px" }}
+      >
+        <Notes />
       </TabPanel>
       <TabPanel
         value={value}

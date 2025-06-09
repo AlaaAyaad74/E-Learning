@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Home from "./pages/Home";
 import CoursePage from "./pages/CoursePage";
+// import VideoPage from "./pages/CoursePage";
 
 function App() {
   const theme = createTheme({
@@ -30,7 +31,8 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/course/:id" element={<CoursePage />} />
+            {/* <Route path="/course/:id" element={<CoursePage />} /> */}
+            <Route path="/course/:id/video/:videoId" element={<CoursePage />} />
           </Routes>
         </Router>
       </Box>

@@ -1,6 +1,6 @@
 import { AppBar, Container, Toolbar, Typography } from "@mui/material";
 import CardCourse from "../components/card_course/CardCourse";
-import { courses } from "../../data/courses";
+import courses from "../../data/courses";
 
 function Home() {
   return (

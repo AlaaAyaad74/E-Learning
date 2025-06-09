@@ -1,4 +1,4 @@
-import { Box, Link, Button, CardMedia } from "@mui/material";
+import { Box, Link, CardMedia } from "@mui/material";
 import type { ICourse } from "../../../interfaces";
 
 function CardCourse({ course }: { course: ICourse }) {
@@ -31,8 +31,10 @@ function CardCourse({ course }: { course: ICourse }) {
       <p>{course.description}</p>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <p>{course.views} views</p>
-        <Link href={`/course/${course.id}`}>
-          <Button variant="contained">View Course</Button>
+        <Link
+          href={`/course/${course.id}/video/${course.sections[0].videos[0].id}`}
+        >
+          View Course
         </Link>
       </Box>
     </Box>
